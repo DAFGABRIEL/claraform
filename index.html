@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="clara.ico" type="image/x-icon">
+    <title>Arcoverde CLARA</title>
+</head>
+<body>
+    <div>
+        <h2>Formulário de Certificado de Garantia</h2>
+        <form id="certificadoForm">
+            <div>
+                <label for="os">Ordem de serviço:</label>
+                <input type="text" id="os" placeholder="Digite a ordem de serviço" max="99999" value="12345" required>
+            </div>
+
+            <div>
+                <label for="codigopedido">Codigo do pedido:</label>
+                <input type="text" id="codigopedido" placeholder="Digite o codigo do pedido" max="99999999" value="12345678" required>
+            </div>
+
+            <div>
+                <label for="nome">Nome do Cliente:</label>
+                <input type="text" id="nome" placeholder="Digite o nome do cliente" pattern="[A-Za-zÀ-ÿ\s]+" maxlength="27" value="Carlos Gabriel" required>
+            </div>
+            <div>
+                <label for="nomeLente">Nome da Lente:</label>
+                <select id="nomeLente">
+                    <option value="CLARA">Clara</option>
+                    <option value="CLARA PREMIUM">Clara Premium</option>
+                </select>
+            </div>
+            <div>
+                <label for="sensity">Possui Sensity:</label>
+                <select id="sensity">
+                    <option value="NÃO">Não</option>
+                    <option value="SENSITY2">Sensity2</option>
+                </select>
+            </div>
+            <div>
+                <label for="material">Material:</label>
+                <select id="material">
+                    <option value="150">1.50</option>
+                    <option value="TRIVEX">Trivex</option>
+                    <option value="POLI">Poli</option>
+                    <option value="167">1.67</option>
+                    <option value="174">1.74</option>
+                </select>
+            </div>
+            <div>
+                <label for="tratamento">Tratamento:</label>
+                <select id="tratamento">
+                    <option value="ECO CLEAN">Cleanextra</option>
+                    <option value="ECO FORTIS">No risk</option>
+                    <option value="ECO FORTIS BLUE">No risk + bluecontrol</option>
+                    <option value="ECO BLUE">Bluecontrol</option>
+                    <option value="ECO INFINITY">Longlife</option>
+                </select>
+            </div>
+            <h3>Inserir Grau</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ESF</th>
+                        <th>CIL</th>
+                        <th>EIXO</th>
+                        <th>DNP</th>
+                        <th>ADD</th>
+                        <th>CO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OD</strong></td>
+                        <td><input type="number" id="esfericoOD" placeholder="Esférico" step="0.25" value="1"></td>
+                        <td><input type="number" id="cilindricoOD" placeholder="Cilíndrico" step="0.25" value="1"></td>
+                        <td><input type="number" id="eixoOD" placeholder="Eixo" min="1" max="180" value="1"></td>
+                        <td><input type="number" id="dnpOD" placeholder="DNP" step="0.25" min="10" max="50" value="10" required></td>
+                        <td><input type="number" id="addOD" placeholder="Adição" step="0.25" min="0.25" max="3.50" value="1" required></td>
+                        <td><input type="number" id="coOD" placeholder="Altura" min="10" max="40" value="10" required></td>
+                    </tr>
+                    <tr>
+                        <td><strong>OE</strong></td>
+                        <td><input type="number" id="esfericoOE" placeholder="Esférico" step="0.25" value="1"></td>
+                        <td><input type="number" id="cilindricoOE" placeholder="Cilíndrico" step="0.25" value="1"></td>
+                        <td><input type="number" id="eixoOE" placeholder="Eixo" min="1" max="180" value="1"></td>
+                        <td><input type="number" id="dnpOE" placeholder="DNP" step="0.25" min="10" max="50" value="10" required></td>
+                        <td><input type="number" id="addOE" placeholder="Adição" step="0.25" min="0.25" max="3.50" value="1" required></td>
+                        <td><input type="number" id="coOE" placeholder="Altura" min="10" max="40" value="10" required></td>
+                    </tr>
+                </tbody>
+            </table><br>
+
+            <div>
+                <label for="medico">Nome do Médico:</label>
+                <input type="text" id="medico" placeholder="Digite o nome do médico" pattern="[A-Za-zÀ-ÿ\s]+" maxlength="50" value="Carlos Gabriel">
+            </div>
+            <div>
+                <label for="otica">Nome da Ótica:</label>
+                <select id="otica">
+                    <option value="ARCOVERDE">Arcoverde</option>
+                    <option value="ARCOVERDE EMPRESARIAL">Arcoverde Empresarial</option>
+                    <option value="ARCOVERDE AVENIDA">Arcoverde Avenida</option>
+                    <option value="ARCOVERDE TRADE">Arcoverde Trade</option>
+                    <option value="STILLUS">Stillus</option>
+                    <option value="CARUARU MATRIZ">Caruaru Matriz</option>
+                    <option value="CARUARU SANTA CRUZ">Caruaru Santa Cruz</option>
+                    <option value="ARCOVERDE SANTA CRUZ">Arcoverde Santa Cruz</option>
+                </select>
+            </div>
+            <div>
+                <label for="data">Data:</label>
+                <input type="date" id="data" required>
+            </div>
+            <button type="button" onclick="printCertificate()">Gerar Certificado de Garantia</button>
+            <button type="button" onclick="document.getElementById('certificadoForm').reset()">Limpar Formulário</button>
+
+        </form>
+</html>
