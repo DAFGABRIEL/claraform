@@ -78,7 +78,6 @@ button:last-child {
 button:last-child:hover {
     background-color: #5a6268;
 }
-
 @media (max-width: 768px) {
     table {
         font-size: 12px;
@@ -133,4 +132,28 @@ button:last-child:hover {
         width: 100%;
         padding: 10px;
     }
+}
+@media print {
+    body * {    
+        visibility: hidden;
+    }
+    #certificado, #certificado * {
+        visibility: visible;
+    }
+    #certificado {
+        display: block;
+        margin: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    * {
+        margin: 0px;
+        white-space: nowrap
+    }
+    @page {
+        margin: 0;
+}
 }
