@@ -216,42 +216,41 @@ body.cardbody {
 }
 
 .card {
-  width: 85.6mm;
-  height: 54mm;
+  width: 128.4mm;
+  height: 81mm;
   border: 1px solid #000;
   border-radius: 4px;
   padding: 5mm;
   box-sizing: border-box;
   background: #fff;
   font-family: Arial, sans-serif;
-  font-size: 8px;
+  font-size: medium
 }
 
 h1.nome {
-  font-size: 10px;
+  font-size: medium;
   margin: 0;
   text-transform: uppercase;
-  text-align: center;
+  font-weight: normal;
 }
 
 p.info, p.lente, p.medico, p.otica, p.data {
-  margin: 4px 0;
-  line-height: 1.2;
-  text-align: center;
+  line-height: 1.5;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 table.cardtable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 5px;
-  font-size: 8px;
+  font-size: medium;
   display: table;
 }
 
 table th.cardth, table td.cardtd {
-  border: 1px solid #000;
-  padding: 2px;
+  padding: 4px;
   text-align: center;
+  vertical-align: middle;
 }
 
 table th.cardth {
@@ -260,24 +259,24 @@ table th.cardth {
 }
 
 .medico {
-  margin-top: 10px;
+  font-size: medium;
   font-weight: bold;
 }
 
 .otica {
-  margin-top: 5px;
+  font-size: medium;
 }
 
 .data {
-  margin-top: 10px;
+  font-size: medium;
 }
 </style>
 </head>
 <body class="cardbody">
     <div class="card">
-      <h1 class="nome">${nome}</h1>
-      <p class="info">${os} | ${codigopedido}</p>
-      <p class="lente">${nomeLente} ${material} ${tratamento} ${sensity !== "NÃO" ? sensity : ""}</p>
+      <h1 class="nome">NOME: ${nome}</h1>
+      <p class="info">ORDEM DE SERVIÇO: ${os} | ${codigopedido}</p>
+      <p class="lente">LENTE: ${nomeLente} ${material} ${tratamento} ${sensity !== "NÃO" ? sensity : ""}</p>
       <table class="cardtable">
         <thead>
           <tr>
@@ -303,19 +302,10 @@ table th.cardth {
             <td class="cardtd">${eixoOE}</td>
             <td class="cardtd">${dnpOE}</td>
           </tr>
-        </tbody>
-      </table>
-      <table class="cardtable">
-        <thead>
           <tr>
-            <th class="cardth">ADD</th>
-            <th class="cardth">CO</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="cardtd">${addOD}</td>
-            <td class="cardtd">${coOD}</td>
+            <td class="cardtd"></td>
+            <td class="cardtd" colspan="2">ALTURA: ${coOD}</td>
+            <td class="cardtd" colspan="2">ADD: ${addOD}</td>
           </tr>
         </tbody>
       </table>
@@ -372,7 +362,7 @@ table th.cardth {
                 <label for="sensity">Possui Sensity:</label>
                 <select id="sensity">
                     <option value="NÃO">Não</option>
-                    <option value="SENSITY2 CINZA">Sensity2</option>
+                    <option value="TRANSLIGHT">Sensity</option>
                 </select>
             </div>
             <div class="form-group">
