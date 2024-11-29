@@ -338,13 +338,16 @@ table th.cardth {
         <h2>Formulário de Certificado de Garantia</h2>
         <form id="certificadoForm">
             <div class="form-group">
+                <label for="codigopedido">Código do Pedido:</label>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="codigopedido" placeholder="Digite o código do pedido" max="99999999">
+                <button id="buscarPedido" style="margin-left: 10px;">Buscar</button>
+            </div>
+            </div>
+            
+            <div class="form-group">
                 <label for="os">Ordem de serviço:</label>
                 <input type="text" id="os" placeholder="Digite a ordem de serviço" max="99999" required>
-            </div>
-
-            <div class="form-group">
-                <label for="codigopedido">Codigo do pedido:</label>
-                <input type="text" id="codigopedido" placeholder="Digite o codigo do pedido" max="99999999" required>
             </div>
 
             <div class="form-group">
@@ -448,4 +451,60 @@ table th.cardth {
         
         <div id="certificado"></div>
     </div>
+    <script>
+        document.getElementById("buscarPedido").addEventListener("click", async function () {
+            const pedidoId = document.getElementById("codigopedido").value.trim(); // Pega o valor do campo de código do pedido
+        
+            if (!pedidoId) {
+                alert("Por favor, insira um número de pedido válido.");
+                return;
+            }
+        
+            const url = `https://tst.hoyalabhomologa.com.br/api/pedido/${pedidoId}`; // Endpoint da API
+        
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "vW21QNBbKE235+++XU0CHNJvoZsThXYJMkE3RjkuM4U=", // Substitua pelo token correto
+                        "Content-Type": "application/json"
+                    }
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar pedido: ${response.status}`);
+                }
+        
+                const data = await response.json(); // Converte a resposta para JSON
+                preencherFormulario(data); // Chama a função para preencher o formulário
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Não foi possível buscar o pedido. Verifique o número e tente novamente.");
+            }
+        });
+        
+        // Função para preencher o formulário com os dados obtidos
+        function preencherFormulario(data) {
+            document.getElementById("nome").value = data.nome_cliente || "";
+            document.getElementById("nomeLente").value = data.nome_lente || "CLARA";
+            document.getElementById("sensity").value = data.sensity || "NÃO";
+            document.getElementById("material").value = data.material || "150";
+            document.getElementById("tratamento").value = data.tratamento || "ECO CLEAN";
+            document.getElementById("esfericoOD").value = data.grau_od.esferico || 0;
+            document.getElementById("cilindricoOD").value = data.grau_od.cilindrico || 0;
+            document.getElementById("eixoOD").value = data.grau_od.eixo || 0;
+            document.getElementById("dnpOD").value = data.grau_od.dnp || 0;
+            document.getElementById("addOD").value = data.grau_od.adicao || 0;
+            document.getElementById("coOD").value = data.grau_od.co || 0;
+            document.getElementById("esfericoOE").value = data.grau_oe.esferico || 0;
+            document.getElementById("cilindricoOE").value = data.grau_oe.cilindrico || 0;
+            document.getElementById("eixoOE").value = data.grau_oe.eixo || 0;
+            document.getElementById("dnpOE").value = data.grau_oe.dnp || 0;
+            document.getElementById("addOE").value = data.grau_oe.adicao || 0;
+            document.getElementById("coOE").value = data.grau_oe.co || 0;
+            document.getElementById("medico").value = data.nome_medico || "";
+            document.getElementById("otica").value = data.otica || "ARCOVERDE";
+            document.getElementById("data").value = data.data_pedido || "";
+        }
+        </script>
 </html>
