@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
+    <link rel="shortcut icon" href="clara.ico" type="image/x-icon">
+    <title>Arcoverde CLARA</title>
+    <style>
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
@@ -30,6 +32,16 @@ label {
     font-weight: bold;
     display: block;
     margin-bottom: 5px;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre os itens */
+}
+
+.inline label {
+    margin: 0; /* Remove margens adicionais do label */
 }
 
 input, select, button {
@@ -163,10 +175,20 @@ button:last-child:hover {
         margin: 0;
 }
 }
-</style>
-    <link rel="shortcut icon" href="clara.ico" type="image/x-icon">
-    <title>Arcoverde CLARA</title>
+    </style>
     <script>
+    function changeOticaOptions() {
+    var caruaruOption = document.getElementById('caruaru').checked;
+    var surubimOption = document.getElementById('surubim').checked;
+
+    if (caruaruOption) {
+        document.getElementById('caruaruOtica').style.display = 'block';
+        document.getElementById('surubimOtica').style.display = 'none';
+    } else if (surubimOption) {
+        document.getElementById('caruaruOtica').style.display = 'none';
+        document.getElementById('surubimOtica').style.display = 'block';
+    }
+}
         function printCertificate() {
             const form = document.getElementById('certificadoForm');
             if (!form.checkValidity()) {
@@ -178,7 +200,7 @@ button:last-child:hover {
     var os = document.getElementById('os').value;
     var codigopedido = document.getElementById('codigopedido').value;
     var nomeLente = document.getElementById('nomeLente').value;
-    var sensity = document.getElementById('sensity').value;
+    var sensity = document.querySelector('input[name="sensity"]:checked') ? document.querySelector('input[name="sensity"]:checked').value : "NÃO";
     var material = document.getElementById('material').value;
     var tratamento = document.getElementById('tratamento').value;
     var esfericoOD = (parseFloat(document.getElementById('esfericoOD').value) || 0).toFixed(2);
@@ -194,8 +216,15 @@ button:last-child:hover {
     var addOE = (parseFloat(document.getElementById('addOE').value) || 0).toFixed(2);
     var coOE = document.getElementById('coOE').value;
     var medico = document.getElementById('medico').value;
-    var otica = document.getElementById('otica').value;
     var data = document.getElementById('data').value;
+
+    var localidade = document.querySelector('input[name="localidade"]:checked').value;
+    var otica = "";
+    if (localidade === "caruaru") {
+        otica = document.getElementById('caruaruOtica').querySelector('select').value;
+    } else if (localidade === "surubim") {
+        otica = document.getElementById('surubimOtica').querySelector('select').value;
+    }
 
             function formatDate(date) {
                 var partes = date.split("-");
@@ -218,7 +247,6 @@ body.cardbody {
 .card {
   width: 128.4mm;
   height: 81mm;
-  border: 1px solid #000;
   border-radius: 4px;
   padding: 5mm;
   box-sizing: border-box;
@@ -260,7 +288,6 @@ table th.cardth {
 
 .medico {
   font-size: medium;
-  font-weight: bold;
 }
 
 .otica {
@@ -275,7 +302,7 @@ table th.cardth {
 <body class="cardbody">
     <div class="card">
       <h1 class="nome">NOME: ${nome}</h1>
-      <p class="info">ORDEM DE SERVIÇO: ${os} | ${codigopedido}</p>
+      <p class="info">REGISTRO: ${os} | ${codigopedido}</p>
       <p class="lente">${nomeLente} ${material} ${tratamento} ${sensity !== "NÃO" ? sensity : ""}</p>
       <table class="cardtable">
         <thead>
@@ -304,8 +331,8 @@ table th.cardth {
           </tr>
           <tr>
             <td class="cardtd"></td>
+            <td class="cardtd" colspan="2">ADIÇÃO: ${addOD}</td>
             <td class="cardtd" colspan="2">ALTURA: ${coOD}</td>
-            <td class="cardtd" colspan="2">ADD: ${addOD}</td>
           </tr>
         </tbody>
       </table>
@@ -338,16 +365,13 @@ table th.cardth {
         <h2>Formulário de Certificado de Garantia</h2>
         <form id="certificadoForm">
             <div class="form-group">
-                <label for="codigopedido">Código do Pedido:</label>
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="codigopedido" placeholder="Digite o código do pedido" max="99999999">
-                <button id="buscarPedido" style="margin-left: 10px;">Buscar</button>
-            </div>
-            </div>
-            
-            <div class="form-group">
                 <label for="os">Ordem de serviço:</label>
                 <input type="text" id="os" placeholder="Digite a ordem de serviço" max="99999" required>
+            </div>
+
+            <div class="form-group">
+                <label for="codigopedido">Codigo do pedido:</label>
+                <input type="text" id="codigopedido" placeholder="Digite o codigo do pedido" max="99999999" required>
             </div>
 
             <div class="form-group">
@@ -362,12 +386,14 @@ table th.cardth {
                 </select>
             </div>
             <div class="form-group">
-                <label for="sensity">Possui Sensity:</label>
-                <select id="sensity">
-                    <option value="NÃO">Não</option>
-                    <option value="TRANSLIGHT">Sensity</option>
-                </select>
-            </div>
+                <label>Possui Translight:</label>
+                <div class="inline">
+                    <label for="sensityNao">Não</label>
+                    <input type="radio" id="sensityNao" name="sensity" value="NÃO">
+                    <label for="sensitySim">Translight</label>
+                    <input type="radio" id="sensitySim" name="sensity" value="TRANSLIGHT">
+                </div>
+            </div>            
             <div class="form-group">
                 <label for="material">Material:</label>
                 <select id="material">
@@ -381,11 +407,11 @@ table th.cardth {
             <div class="form-group">
                 <label for="tratamento">Tratamento:</label>
                 <select id="tratamento">
-                    <option value="ECO CLEAN">Cleanextra</option>
-                    <option value="ECO FORTIS">No risk</option>
-                    <option value="ECO FORTIS BLUE">No risk + bluecontrol</option>
-                    <option value="ECO BLUE">Bluecontrol</option>
-                    <option value="ECO INFINITY">Longlife</option>
+                    <option value="ECO CLEAN">Eco Clean</option>
+                    <option value="ECO FORTIS">Eco Fortis</option>
+                    <option value="ECO FORTIS BLUE">Eco Fortus Blue</option>
+                    <option value="ECO BLUE">Eco Blue</option>
+                    <option value="ECO INFINITY">Eco Infinity</option>
                 </select>
             </div>
             <h3>Inserir Grau</h3>
@@ -427,7 +453,16 @@ table th.cardth {
                 <label for="medico">Nome do Médico:</label>
                 <input type="text" id="medico" placeholder="Digite o nome do médico" pattern="[A-Za-zÀ-ÿ\s]+" maxlength="50">
             </div>
-            <div class="form-group">
+
+            <label>Selecione a Localidade:</label>
+            <div class="form-group inline">
+                <label for="caruaru">Caruaru</label>
+                <input type="radio" id="caruaru" name="localidade" value="caruaru" onclick="changeOticaOptions()"> 
+                <label for="surubim">Surubim</label>
+                <input type="radio" id="surubim" name="localidade" value="surubim" onclick="changeOticaOptions()"> 
+            </div>
+            
+            <div id="caruaruOtica" class="form-group" style="display: none;">
                 <label for="otica">Nome da Ótica:</label>
                 <select id="otica">
                     <option value="ARCOVERDE">Arcoverde</option>
@@ -440,6 +475,19 @@ table th.cardth {
                     <option value="ARCOVERDE SANTA CRUZ">Arcoverde Santa Cruz</option>
                 </select>
             </div>
+            
+            <div id="surubimOtica" class="form-group" style="display: none;">
+                <label for="otica">Nome da Ótica:</label>
+                <select id="otica">
+                    <option value="FREE SHOPPING SURUBIM">Free Shopping - Surubim</option>
+                    <option value="FREE SHOPPING LIMOEIRO">Free Shopping - Limoeiro</option>
+                    <option value="ARCOVERDE SURUBIM">Arcoverde - Surubim</option> 
+                    <option value="CHILLI BEANS SURUBIM">Chilli Beans - Surubim</option>
+                    <option value="CHILLI BEANS CARPINA">Chilli Beans - Carpina</option> 
+                    <option value="NACHO LOCO">Stillu</option> 
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="data">Data:</label>
                 <input type="date" id="data" required>
@@ -451,60 +499,4 @@ table th.cardth {
         
         <div id="certificado"></div>
     </div>
-    <script>
-        document.getElementById("buscarPedido").addEventListener("click", async function () {
-            const pedidoId = document.getElementById("codigopedido").value.trim(); // Pega o valor do campo de código do pedido
-        
-            if (!pedidoId) {
-                alert("Por favor, insira um número de pedido válido.");
-                return;
-            }
-        
-            const url = `https://tst.hoyalabhomologa.com.br/api/pedido/${pedidoId}`; // Endpoint da API
-        
-            try {
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": "vW21QNBbKE235+++XU0CHNJvoZsThXYJMkE3RjkuM4U=", // Substitua pelo token correto
-                        "Content-Type": "application/json"
-                    }
-                });
-        
-                if (!response.ok) {
-                    throw new Error(`Erro ao buscar pedido: ${response.status}`);
-                }
-        
-                const data = await response.json(); // Converte a resposta para JSON
-                preencherFormulario(data); // Chama a função para preencher o formulário
-            } catch (error) {
-                console.error("Erro:", error);
-                alert("Não foi possível buscar o pedido. Verifique o número e tente novamente.");
-            }
-        });
-        
-        // Função para preencher o formulário com os dados obtidos
-        function preencherFormulario(data) {
-            document.getElementById("nome").value = data.nome_cliente || "";
-            document.getElementById("nomeLente").value = data.nome_lente || "CLARA";
-            document.getElementById("sensity").value = data.sensity || "NÃO";
-            document.getElementById("material").value = data.material || "150";
-            document.getElementById("tratamento").value = data.tratamento || "ECO CLEAN";
-            document.getElementById("esfericoOD").value = data.grau_od.esferico || 0;
-            document.getElementById("cilindricoOD").value = data.grau_od.cilindrico || 0;
-            document.getElementById("eixoOD").value = data.grau_od.eixo || 0;
-            document.getElementById("dnpOD").value = data.grau_od.dnp || 0;
-            document.getElementById("addOD").value = data.grau_od.adicao || 0;
-            document.getElementById("coOD").value = data.grau_od.co || 0;
-            document.getElementById("esfericoOE").value = data.grau_oe.esferico || 0;
-            document.getElementById("cilindricoOE").value = data.grau_oe.cilindrico || 0;
-            document.getElementById("eixoOE").value = data.grau_oe.eixo || 0;
-            document.getElementById("dnpOE").value = data.grau_oe.dnp || 0;
-            document.getElementById("addOE").value = data.grau_oe.adicao || 0;
-            document.getElementById("coOE").value = data.grau_oe.co || 0;
-            document.getElementById("medico").value = data.nome_medico || "";
-            document.getElementById("otica").value = data.otica || "ARCOVERDE";
-            document.getElementById("data").value = data.data_pedido || "";
-        }
-        </script>
 </html>

@@ -26,6 +26,16 @@ label {
     margin-bottom: 5px;
 }
 
+.inline {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre os itens */
+}
+
+.inline label {
+    margin: 0; /* Remove margens adicionais do label */
+}
+
 input, select, button {
     width: 95%;
     padding: 10px;

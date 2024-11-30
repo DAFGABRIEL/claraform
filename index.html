@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="clara.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
     <title>Arcoverde CLARA</title>
     <script>
+    function changeOticaOptions() {
+    var caruaruOption = document.getElementById('caruaru').checked;
+    var surubimOption = document.getElementById('surubim').checked;
+
+    if (caruaruOption) {
+        document.getElementById('caruaruOtica').style.display = 'block';
+        document.getElementById('surubimOtica').style.display = 'none';
+    } else if (surubimOption) {
+        document.getElementById('caruaruOtica').style.display = 'none';
+        document.getElementById('surubimOtica').style.display = 'block';
+    }
+}
         function printCertificate() {
             const form = document.getElementById('certificadoForm');
             if (!form.checkValidity()) {
@@ -17,7 +30,7 @@
     var os = document.getElementById('os').value;
     var codigopedido = document.getElementById('codigopedido').value;
     var nomeLente = document.getElementById('nomeLente').value;
-    var sensity = document.getElementById('sensity').value;
+    var sensity = document.querySelector('input[name="sensity"]:checked') ? document.querySelector('input[name="sensity"]:checked').value : "NÃO";
     var material = document.getElementById('material').value;
     var tratamento = document.getElementById('tratamento').value;
     var esfericoOD = (parseFloat(document.getElementById('esfericoOD').value) || 0).toFixed(2);
@@ -33,8 +46,15 @@
     var addOE = (parseFloat(document.getElementById('addOE').value) || 0).toFixed(2);
     var coOE = document.getElementById('coOE').value;
     var medico = document.getElementById('medico').value;
-    var otica = document.getElementById('otica').value;
     var data = document.getElementById('data').value;
+
+    var localidade = document.querySelector('input[name="localidade"]:checked').value;
+    var otica = "";
+    if (localidade === "caruaru") {
+        otica = document.getElementById('caruaruOtica').querySelector('select').value;
+    } else if (localidade === "surubim") {
+        otica = document.getElementById('surubimOtica').querySelector('select').value;
+    }
 
             function formatDate(date) {
                 var partes = date.split("-");
@@ -57,7 +77,6 @@ body.cardbody {
 .card {
   width: 128.4mm;
   height: 81mm;
-  border: 1px solid #000;
   border-radius: 4px;
   padding: 5mm;
   box-sizing: border-box;
@@ -99,7 +118,6 @@ table th.cardth {
 
 .medico {
   font-size: medium;
-  font-weight: bold;
 }
 
 .otica {
@@ -114,7 +132,7 @@ table th.cardth {
 <body class="cardbody">
     <div class="card">
       <h1 class="nome">NOME: ${nome}</h1>
-      <p class="info">ORDEM DE SERVIÇO: ${os} | ${codigopedido}</p>
+      <p class="info">REGISTRO: ${os} | ${codigopedido}</p>
       <p class="lente">${nomeLente} ${material} ${tratamento} ${sensity !== "NÃO" ? sensity : ""}</p>
       <table class="cardtable">
         <thead>
@@ -143,8 +161,8 @@ table th.cardth {
           </tr>
           <tr>
             <td class="cardtd"></td>
+            <td class="cardtd" colspan="2">ADIÇÃO: ${addOD}</td>
             <td class="cardtd" colspan="2">ALTURA: ${coOD}</td>
-            <td class="cardtd" colspan="2">ADD: ${addOD}</td>
           </tr>
         </tbody>
       </table>
@@ -198,12 +216,14 @@ table th.cardth {
                 </select>
             </div>
             <div class="form-group">
-                <label for="sensity">Possui Sensity:</label>
-                <select id="sensity">
-                    <option value="NÃO">Não</option>
-                    <option value="TRANSLIGHT">Sensity</option>
-                </select>
-            </div>
+                <label>Possui Translight:</label>
+                <div class="inline">
+                    <label for="sensityNao">Não</label>
+                    <input type="radio" id="sensityNao" name="sensity" value="NÃO">
+                    <label for="sensitySim">Translight</label>
+                    <input type="radio" id="sensitySim" name="sensity" value="TRANSLIGHT">
+                </div>
+            </div>            
             <div class="form-group">
                 <label for="material">Material:</label>
                 <select id="material">
@@ -217,11 +237,11 @@ table th.cardth {
             <div class="form-group">
                 <label for="tratamento">Tratamento:</label>
                 <select id="tratamento">
-                    <option value="ECO CLEAN">Cleanextra</option>
-                    <option value="ECO FORTIS">No risk</option>
-                    <option value="ECO FORTIS BLUE">No risk + bluecontrol</option>
-                    <option value="ECO BLUE">Bluecontrol</option>
-                    <option value="ECO INFINITY">Longlife</option>
+                    <option value="ECO CLEAN">Eco Clean</option>
+                    <option value="ECO FORTIS">Eco Fortis</option>
+                    <option value="ECO FORTIS BLUE">Eco Fortus Blue</option>
+                    <option value="ECO BLUE">Eco Blue</option>
+                    <option value="ECO INFINITY">Eco Infinity</option>
                 </select>
             </div>
             <h3>Inserir Grau</h3>
@@ -263,7 +283,16 @@ table th.cardth {
                 <label for="medico">Nome do Médico:</label>
                 <input type="text" id="medico" placeholder="Digite o nome do médico" pattern="[A-Za-zÀ-ÿ\s]+" maxlength="50">
             </div>
-            <div class="form-group">
+
+            <label>Selecione a Localidade:</label>
+            <div class="form-group inline">
+                <label for="caruaru">Caruaru</label>
+                <input type="radio" id="caruaru" name="localidade" value="caruaru" onclick="changeOticaOptions()"> 
+                <label for="surubim">Surubim</label>
+                <input type="radio" id="surubim" name="localidade" value="surubim" onclick="changeOticaOptions()"> 
+            </div>
+            
+            <div id="caruaruOtica" class="form-group" style="display: none;">
                 <label for="otica">Nome da Ótica:</label>
                 <select id="otica">
                     <option value="ARCOVERDE">Arcoverde</option>
@@ -276,6 +305,19 @@ table th.cardth {
                     <option value="ARCOVERDE SANTA CRUZ">Arcoverde Santa Cruz</option>
                 </select>
             </div>
+            
+            <div id="surubimOtica" class="form-group" style="display: none;">
+                <label for="otica">Nome da Ótica:</label>
+                <select id="otica">
+                    <option value="FREE SHOPPING SURUBIM">Free Shopping - Surubim</option>
+                    <option value="FREE SHOPPING LIMOEIRO">Free Shopping - Limoeiro</option>
+                    <option value="ARCOVERDE SURUBIM">Arcoverde - Surubim</option> 
+                    <option value="CHILLI BEANS SURUBIM">Chilli Beans - Surubim</option>
+                    <option value="CHILLI BEANS CARPINA">Chilli Beans - Carpina</option> 
+                    <option value="NACHO LOCO">Stillu</option> 
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="data">Data:</label>
                 <input type="date" id="data" required>
