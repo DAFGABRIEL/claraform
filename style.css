@@ -29,11 +29,11 @@ label {
 .inline {
     display: flex;
     align-items: center;
-    gap: 10px; /* Espaço entre os itens */
+    gap: 10px;
 }
 
 .inline label {
-    margin: 0; /* Remove margens adicionais do label */
+    margin: 0;
 }
 
 input, select, button {
