@@ -31,6 +31,7 @@
     var codigopedido = document.getElementById('codigopedido').value;
     var nomeLente = document.getElementById('nomeLente').value;
     var sensity = document.querySelector('input[name="sensity"]:checked') ? document.querySelector('input[name="sensity"]:checked').value : "NÃO";
+    var cor = document.querySelector('input[name="cor"]:checked') ? document.querySelector('input[name="cor"]:checked').value : "NÃO";
     var material = document.getElementById('material').value;
     var tratamento = document.getElementById('tratamento').value;
     var esfericoOD = (parseFloat(document.getElementById('esfericoOD').value) || 0).toFixed(2);
@@ -47,6 +48,10 @@
     var coOE = document.getElementById('coOE').value;
     var medico = document.getElementById('medico').value;
     var data = document.getElementById('data').value;
+    var olhoSelecionado = document.querySelector('input[name="selecionarOlho"]:checked').value;
+
+    cilindricoOD = cilindricoOD > 0 ? `-${cilindricoOD}` : cilindricoOD;
+    cilindricoOE = cilindricoOE > 0 ? `-${cilindricoOE}` : cilindricoOE;
 
     var localidade = document.querySelector('input[name="localidade"]:checked').value;
     var otica = "";
@@ -82,7 +87,7 @@ body.cardbody {
   box-sizing: border-box;
   background: #fff;
   font-family: Arial, sans-serif;
-  font-size: medium
+  font-size: medium;
 }
 
 h1.nome {
@@ -116,15 +121,7 @@ table th.cardth {
   background-color: #f0f0f0;
 }
 
-.medico {
-  font-size: medium;
-}
-
-.otica {
-  font-size: medium;
-}
-
-.data {
+.medico, .otica, .data {
   font-size: medium;
 }
 </style>
@@ -133,7 +130,7 @@ table th.cardth {
     <div class="card">
       <h1 class="nome">NOME: ${nome}</h1>
       <p class="info">REGISTRO: ${os} | ${codigopedido}</p>
-      <p class="lente">${nomeLente} ${material} ${tratamento} ${sensity !== "NÃO" ? sensity : ""}</p>
+      <p class="lente">${nomeLente} ${material} ${tratamento} ${sensity !== "NÃO" ? sensity : ""} ${cor !== "NÃO" ? cor : ""}</p>
       <table class="cardtable">
         <thead>
           <tr>
@@ -145,20 +142,24 @@ table th.cardth {
           </tr>
         </thead>
         <tbody>
+          ${olhoSelecionado === "OD" || olhoSelecionado === "AMBOS" ? `
           <tr>
             <td class="cardtd">OD</td>
             <td class="cardtd">${esfericoOD}</td>
             <td class="cardtd">${cilindricoOD}</td>
             <td class="cardtd">${eixoOD}</td>
             <td class="cardtd">${dnpOD}</td>
-          </tr>
+          </tr>` : ''}
+          
+          ${olhoSelecionado === "OE" || olhoSelecionado === "AMBOS" ? `
           <tr>
             <td class="cardtd">OE</td>
             <td class="cardtd">${esfericoOE}</td>
             <td class="cardtd">${cilindricoOE}</td>
             <td class="cardtd">${eixoOE}</td>
             <td class="cardtd">${dnpOE}</td>
-          </tr>
+          </tr>` : ''}
+          
           <tr>
             <td class="cardtd"></td>
             <td class="cardtd" colspan="2">ADIÇÃO: ${addOD}</td>
@@ -170,7 +171,7 @@ table th.cardth {
       <p class="otica">ÓTICA ${otica}</p>
       <p class="data">DATA: ${dataFormatada}</p>
     </div>
-  </body>`;
+</body>`;
 
             document.getElementById('certificado').innerHTML = certificado;
 
@@ -219,10 +220,17 @@ table th.cardth {
                 <label>Possui Translight:</label>
                 <div class="inline">
                     <label for="sensityNao">Não</label>
-                    <input type="radio" id="sensityNao" name="sensity" value="NÃO">
+                    <input type="radio" id="sensityNao" name="sensity" value="NÃO" checked>
                     <label for="sensitySim">Translight</label>
-                    <input type="radio" id="sensitySim" name="sensity" value="TRANSLIGHT">
+                    <input type="radio" id="sensitySim" name="sensity" value="TRANSLIGHT"><br>
                 </div>
+                <label>Possui Coloração:</label>
+                <div class="inline">
+                <label for="cornao">Não</label>
+                <input type="radio" id="cornao" name="cor" value="NÃO" checked>
+                <label for="corsim">coloração</label>
+                <input type="radio" id="corsim" name="cor" value="COLORAÇÃO">
+            </div>
             </div>            
             <div class="form-group">
                 <label for="material">Material:</label>
@@ -238,7 +246,6 @@ table th.cardth {
                 <label for="tratamento">Tratamento:</label>
                 <select id="tratamento">
                     <option value="ANTIRISCO">Antirisco</option>
-                    <option value="ANTIRISCO + COLORAÇÃO">Antirisco + coloração</option>
                     <option value="ECO CLEAN">Eco Clean</option>
                     <option value="ECO FORTIS">Eco Fortis</option>
                     <option value="ECO FORTIS BLUE">Eco Fortus Blue</option>
@@ -247,6 +254,18 @@ table th.cardth {
                 </select>
             </div>
             <h3>Inserir Grau</h3>
+            <label>Selecionar olho:</label>
+            <div class="form-group inline">
+                <label for="selecionarOD">Apenas OD</label>
+                <input type="radio" id="selecionarOD" name="selecionarOlho" value="OD" onclick="toggleEyeSelection()">
+                
+                <label for="selecionarOE">Apenas OE</label>
+                <input type="radio" id="selecionarOE" name="selecionarOlho" value="OE" onclick="toggleEyeSelection()">
+                
+                <label for="selecionarAmbos">Ambos</label>
+                <input type="radio" id="selecionarAmbos" name="selecionarOlho" value="AMBOS" checked onclick="toggleEyeSelection()">
+            </div>
+            
             <table>
                 <thead>
                     <tr>
@@ -260,26 +279,70 @@ table th.cardth {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr id="linhaOD">
                         <td><strong>OD</strong></td>
                         <td><input type="number" id="esfericoOD" placeholder="ESF" step="0.25"></td>
                         <td><input type="number" id="cilindricoOD" placeholder="CIL" step="0.25"></td>
                         <td><input type="number" id="eixoOD" placeholder="E" min="1" max="180"></td>
-                        <td><input type="number" id="dnpOD" placeholder="DNP" step="0.25" min="10" max="50"required></td>
-                        <td><input type="number" id="addOD" placeholder="ADD" step="0.25" min="0.25" max="3.50"required></td>
-                        <td><input type="number" id="coOD" placeholder="CO" min="10" max="40"required></td>
+                        <td><input type="number" id="dnpOD" placeholder="DNP" step="0.25" min="10" max="50" required></td>
+                        <td><input type="number" id="addOD" placeholder="ADD" step="0.25" min="0.25" max="3.50" required></td>
+                        <td><input type="number" id="coOD" placeholder="CO" min="10" max="40" required></td>
                     </tr>
-                    <tr>
+                    <tr id="linhaOE">
                         <td><strong>OE</strong></td>
                         <td><input type="number" id="esfericoOE" placeholder="ESF" step="0.25"></td>
                         <td><input type="number" id="cilindricoOE" placeholder="CIL" step="0.25"></td>
                         <td><input type="number" id="eixoOE" placeholder="Ei" min="1" max="180"></td>
-                        <td><input type="number" id="dnpOE" placeholder="DNP" step="0.25" min="10" max="50"required></td>
-                        <td><input type="number" id="addOE" placeholder="ADD" step="0.25" min="0.25" max="3.50"required></td>
-                        <td><input type="number" id="coOE" placeholder="CO" min="10" max="40"required></td>
+                        <td><input type="number" id="dnpOE" placeholder="DNP" step="0.25" min="10" max="50" required></td>
+                        <td><input type="number" id="addOE" placeholder="ADD" step="0.25" min="0.25" max="3.50" required></td>
+                        <td><input type="number" id="coOE" placeholder="CO" min="10" max="40" required></td>
                     </tr>
                 </tbody>
-            </table><br>
+            </table>
+            
+            <script>
+            function toggleEyeSelection() {
+                var escolha = document.querySelector('input[name="selecionarOlho"]:checked').value;
+                
+                var linhaOD = document.getElementById('linhaOD');
+                var linhaOE = document.getElementById('linhaOE');
+                
+                if (escolha === "OD") {
+                    linhaOD.style.display = "table-row";
+                    linhaOE.style.display = "none";
+                    desativarCamposOE(true);
+                    desativarCamposOD(false);
+                } else if (escolha === "OE") {
+                    linhaOD.style.display = "none";
+                    linhaOE.style.display = "table-row";
+                    desativarCamposOD(true);
+                    desativarCamposOE(false);
+                } else {
+                    linhaOD.style.display = "table-row";
+                    linhaOE.style.display = "table-row";
+                    desativarCamposOD(false);
+                    desativarCamposOE(false);
+                }
+            }
+            
+            function desativarCamposOD(desativar) {
+                document.getElementById('esfericoOD').disabled = desativar;
+                document.getElementById('cilindricoOD').disabled = desativar;
+                document.getElementById('eixoOD').disabled = desativar;
+                document.getElementById('dnpOD').disabled = desativar;
+                document.getElementById('addOD').disabled = desativar;
+                document.getElementById('coOD').disabled = desativar;
+            }
+            
+            function desativarCamposOE(desativar) {
+                document.getElementById('esfericoOE').disabled = desativar;
+                document.getElementById('cilindricoOE').disabled = desativar;
+                document.getElementById('eixoOE').disabled = desativar;
+                document.getElementById('dnpOE').disabled = desativar;
+                document.getElementById('addOE').disabled = desativar;
+                document.getElementById('coOE').disabled = desativar;
+            }
+            </script><br>
 
             <div class="form-group">
                 <label for="medico">Nome do Médico:</label>
